@@ -59,7 +59,16 @@ mtw_df = read_excel("data/202509 Trash Wheel Collection Data.xlsx",
                     sheet = "Mr. Trash Wheel",
                     skip = 1) |> 
   janitor::clean_names() |> 
-  filter(!(dumpster == "na") ) |> 
+  filter(!(dumpster == "na")) |> 
   mutate(sports_balls = as.integer(round(sports_balls)))
 ```
+
+```{r}
+ptw_df = read_excel("data/202509 Trash Wheel Collection Data.xlsx",
+                    sheet = "Professor Trash Wheel",
+                    skip = 1) |> 
+  janitor::clean_names() |> 
+  filter(!(dumpster == "na")) 
+```
+
 
