@@ -127,4 +127,21 @@ zip_not_app_df = filter(zip_df, !(zip_code %in% rent_df$zip_code))
 ```
 There are total `r length(unique(zip_not_app_df$zip_code))` zip codes that appear in the ZIP code dataset but not in the Zillow Rental Price dataset. These zip codes are: `r paste(zip_not_app_df$zip_code, collapse = ", ")`.  
 
-The reason that these zip codes are not included in the Zillow database could be that there are commercial zip codes with no residential significance, or retired zip codes. It can also be that the zip code represents an area with very small populations which does not provide enough rental data. For example the zip code **10249** in this list is located in New York, NY, and is a PO-box zip code which does not have residential housing significance.
+The reason that these zip codes are not included in the Zillow database could be that there are commercial zip codes with no residential significance, or retired zip codes. It can also be that the zip code represents an area with very small populations which does not provide enough rental data. For example the zip code **10249** in this list is located in New York, NY, and is a PO-box zip code which does not have residential housing significance.  
+
+```{r}
+cov19_20vs21_df = filter(
+  rent_neigh_joint_df, 
+  date == "2020-01-31" | date == "2021-01-31") |> 
+  select(zip_code, county_name, neighborhood, rent_rate, date) |> 
+  pivot_wider(names_from = date,
+              values_from = rent_rate,
+              names_prefix = "rent_",
+              values_fn = mean,
+              values_fill = NA) |> 
+  drop_na("rent_2020-01-31","rent_2021-01-31") |> 
+  mutate(`rent_2020-01-31` = as.numeric(`rent_2020-01-31`),
+         `rent_2021-01-31` = as.numeric(`rent_2021-01-31`)) |> 
+  mutate(price_dropped = `rent_2020-01-31` - `rent_2021-01-31`)
+```
+
