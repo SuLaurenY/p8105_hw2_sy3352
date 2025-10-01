@@ -9,6 +9,7 @@ output: github_document
 library(tidyverse)
 library(readxl)
 library(janitor)
+library(knitr)
 ```
 
 ## Problem 1
@@ -145,3 +146,15 @@ cov19_20vs21_df = filter(
   mutate(price_dropped = `rent_2020-01-31` - `rent_2021-01-31`)
 ```
 
+```{r}
+top_drop = arrange(cov19_20vs21_df, desc(price_dropped)) |> 
+  slice_head(n = 10) |> 
+  select(zip_code, county_name, neighborhood,price_dropped) |> 
+  kable(
+    digits = 0,
+    col.name = c("zip_code","borough","neighborhood","price_dropped")
+  )
+top_drop
+```
+
+The table above shows the 10 zip codes that experienced the largest rent drop from Jan 2020 to Jan 2021 due to the impact of covid-19. The relevant borough name and neighborhood are also displayed in the table. All these zip codes are in New York county, indicating that the most populated area also expereinced the largest impact of covid in terms of rent.
