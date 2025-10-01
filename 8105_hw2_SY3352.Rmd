@@ -112,4 +112,6 @@ rent_neigh_joint_df = rent_df |>
   relocate(last_col(), .after = 2)
 ```
 
+The result tidy dataset `rent_neigh_joint_df` has `r nrow(rent_neigh_joint_df)` rows of observations and `r ncol(rent_neigh_joint_df)` columns of data. It contains information of rent by month throughout 2015 - 2024 in NYC with variables of `zip_code` `county_name` `neighborhood` `date` and `rent rate`. There are `r length(unique(rent_neigh_joint_df$zip_code))` unique zip codes and `r length(unique(rent_neigh_joint_df$neighborhood))` unique neighborhoods.
+
 
