@@ -60,7 +60,8 @@ mtw_df = read_excel("data/202509 Trash Wheel Collection Data.xlsx",
                     skip = 1) |> 
   janitor::clean_names() |> 
   filter(!(dumpster == "na")) |> 
-  mutate(sports_balls = as.integer(round(sports_balls)))
+  mutate(sports_balls = as.integer(round(sports_balls))) |> 
+  select(-x15, -x16)
 ```
 
 ```{r}
@@ -78,3 +79,11 @@ gtw_df = read_excel("data/202509 Trash Wheel Collection Data.xlsx",
   janitor::clean_names() |> 
   filter(!(dumpster == "na")) 
 ```
+
+```{r}
+mtw_df = mutate(mtw_df, wheel_name = "Mr. Trash Wheel", year = as.integer(year))
+ptw_df = mutate(ptw_df, wheel_name = "Professor Trash Wheel", year = as.integer(year))
+gtw_df = mutate(gtw_df, wheel_name = "Gwynns Falls Trash Wheel", year = as.integer(year))
+combined_df = bind_rows(mtw_df, ptw_df, gtw_df) 
+```
+
