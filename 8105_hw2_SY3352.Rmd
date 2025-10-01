@@ -88,3 +88,16 @@ combined_df = bind_rows(mtw_df, ptw_df, gtw_df)
 ```
 
 By combining the data from the three data sheets, we get the `combined_df` data set, which has `r nrow(combined_df)` rows of observations and `r ncol(combined_df)` columns of data. The dataset give information by each dumpster from the three wheels: **Mr. Trash Wheel**, **Professor Trash Wheel**, and **Gwynns Falls Trash Wheel**. Some of the key variables  are `weight_tons` `plastic_bottles` `cigarette_butts` `glass_bottles` and `homes_powered`. The total weight of trash collected by Professor Trash Wheel is `r sum(combined_df$weight_tons[combined_df$wheel_name == "Professor Trash Wheel"])` tons, and the total number of cigarette butts collected by Gwynnda in June of 2022 is `r as.integer(sum(combined_df$cigarette_butts[combined_df$wheel_name == "Gwynns Falls Trash Wheel" & combined_df$month == "June" & combined_df$year == 2022]))`.
+
+## Problem 3
+```{r}
+rent_df = read_csv("data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv") |> 
+  pivot_longer(cols = 10:125,
+               names_to = "date",
+               values_to = "rent_rate") |> 
+  janitor::clean_names() |> 
+  select(-region_type, -state_name, -state, -city, -metro) |> 
+  mutate(county_name = str_trim(str_remove(county_name, " County$"))) |> 
+  relocate(1:2, .after = last_col())
+```
+
