@@ -16,15 +16,15 @@ pols_df = read_csv("data/pols-month.csv") |>
   mutate(year = as.integer(year), month = as.integer(month)) |> 
   mutate(month = month.name[month]) |> 
   mutate(president = if_else(prez_gop == 1, "gop","dem")) |> 
-  select(-prez_dem, -prez_gop)
+  select(-prez_dem, -prez_gop,-day)
 ```
 
 ```{r}
 snp_df = read_csv("data/snp.csv") |> 
   mutate(date = mdy(date)) |> 
   mutate(year = year(date), month = month(date), day = day(date)) |> 
-  mutate(month = month.name[month]) |> 
-  select(-date) |> 
+  mutate(year = as.integer(year), month = month.name[month]) |> 
+  select(-date, -day) |> 
   relocate(year, month) |> 
   arrange(year, match(month, month.name))
 ```
@@ -38,6 +38,13 @@ unemp_df = read_csv("data/unemployment.csv") |>
                         Jan = "January", Feb = "February", Mar = "March",
                         Apr = "April", May = "May", Jun = "June",
                         Jul = "July", Aug = "August", Sep = "September",
-                        Oct = "October", Nov = "November", Dec = "December")) 
+                        Oct = "October", Nov = "November", Dec = "December")) |> 
+  rename(year = Year) 
+```
+
+```{r}
+merge_df = pols_df |> 
+  left_join(snp_df, by = c("year","month")) |> 
+  left_join(unemp_df, by = c("year","month"))
 ```
 
