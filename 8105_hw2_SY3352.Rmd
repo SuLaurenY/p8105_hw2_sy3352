@@ -13,30 +13,15 @@ library(tidyverse)
 ```{r}
 pols_df = read_csv("data/pols-month.csv") |> 
   separate(mon, into = c("year","month","day"), sep = "-") |> 
-  mutate(month = as.integer(month)) |> 
-  
-  
-  
+  mutate(year = as.integer(year), month = as.integer(month)) |> 
+  mutate(month = month.name[month]) |> 
+  mutate(president = if_else(prez_gop == 1, "gop","dem")) |> 
+  select(-prez_dem, -prez_gop)
 ```
 
-
-
-
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+snp_df = read_csv("data/snp.csv") |> 
+  separate(date, into = c("year","month","day"), sep = "/") |> 
+  mutate(year = as.integer(year), month = as.integer(month)) |> 
+  mutate(month = month.name[month]) 
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
