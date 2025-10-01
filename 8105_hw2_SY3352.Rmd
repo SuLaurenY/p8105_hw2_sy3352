@@ -38,10 +38,12 @@ unemp_df = read_csv("data/unemployment.csv") |>
                names_to = "month",
                values_to = "unemployment_rate") |> 
   mutate(month = recode(month,
-                        Jan = "January", Feb = "February", Mar = "March",
-                        Apr = "April", May = "May", Jun = "June",
-                        Jul = "July", Aug = "August", Sep = "September",
-                        Oct = "October", Nov = "November", Dec = "December")) |> 
+                        Jan = "January", Feb = "February", 
+                        Mar = "March", Apr = "April", 
+                        May = "May", Jun = "June",
+                        Jul = "July", Aug = "August", 
+                        Sep = "September", Oct = "October",
+                        Nov = "November", Dec = "December")) |> 
   rename(year = Year) 
 ```
 
@@ -81,9 +83,15 @@ gtw_df = read_excel("data/202509 Trash Wheel Collection Data.xlsx",
 ```
 
 ```{r}
-mtw_df = mutate(mtw_df, wheel_name = "Mr. Trash Wheel", year = as.integer(year))
-ptw_df = mutate(ptw_df, wheel_name = "Professor Trash Wheel", year = as.integer(year))
-gtw_df = mutate(gtw_df, wheel_name = "Gwynns Falls Trash Wheel", year = as.integer(year))
+mtw_df = mutate(mtw_df, 
+                wheel_name = "Mr. Trash Wheel", 
+                year = as.integer(year))
+ptw_df = mutate(ptw_df, 
+                wheel_name = "Professor Trash Wheel", 
+                year = as.integer(year))
+gtw_df = mutate(gtw_df, 
+                wheel_name = "Gwynns Falls Trash Wheel", 
+                year = as.integer(year))
 combined_df = bind_rows(mtw_df, ptw_df, gtw_df) 
 ```
 
@@ -114,4 +122,9 @@ rent_neigh_joint_df = rent_df |>
 
 The result tidy dataset `rent_neigh_joint_df` has `r nrow(rent_neigh_joint_df)` rows of observations and `r ncol(rent_neigh_joint_df)` columns of data. It contains information of rent by month throughout 2015 - 2024 in NYC with variables of `zip_code` `county_name` `neighborhood` `date` and `rent rate`. There are `r length(unique(rent_neigh_joint_df$zip_code))` unique zip codes and `r length(unique(rent_neigh_joint_df$neighborhood))` unique neighborhoods.
 
+```{r}
+zip_not_app_df = filter(zip_df, !(zip_code %in% rent_df$zip_code)) 
+```
+There are total `r length(unique(zip_not_app_df$zip_code))` zip codes that appear in the ZIP code dataset but not in the Zillow Rental Price dataset. These zip codes are: `r paste(zip_not_app_df$zip_code, collapse = ", ")`.  
 
+The reason that these zip codes are not included in the Zillow database could be that there are commercial zip codes with no residential significance, or retired zip codes. It can also be that the zip code represents an area with very small populations which does not provide enough rental data. For example the zip code **10249** in this list is located in New York, NY, and is a PO-box zip code which does not have residential housing significance.
